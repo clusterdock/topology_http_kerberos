@@ -20,7 +20,7 @@ from clusterdock.utils import wait_for_condition
 
 logger = logging.getLogger('clusterdock.{}'.format(__name__))
 
-DEFAULT_NAMESPACE = 'streamsets'
+DEFAULT_NAMESPACE = 'clusterdock'
 
 KERBEROS_VOLUME_DIR = '/etc/clusterdock/kerberos'
 
@@ -35,14 +35,14 @@ KDC_KRB5_CONF_FILENAME = '/etc/krb5.conf'
 def main(args):
     kerberos_volume_dir = os.path.expanduser(args.kerberos_config_directory or args.clusterdock_config_directory)
 
-    kdc_image = '{}/{}/clusterdock:topology_http_kerberos-kdc'.format(args.registry,
-                                                                      args.namespace or DEFAULT_NAMESPACE)
+    kdc_image = '{}/{}/topology_http_kerberos:kdc'.format(args.registry,
+                                                          args.namespace or DEFAULT_NAMESPACE)
     kdc_hostname = args.kdc_node[0]
     kdc_node = Node(hostname=kdc_hostname, group='kdc', image=kdc_image,
                     volumes=[{kerberos_volume_dir: KERBEROS_VOLUME_DIR}])
 
-    webserver_image = '{}/{}/clusterdock:topology_http_kerberos-webserver'.format(args.registry,
-                                                                                  args.namespace or DEFAULT_NAMESPACE)
+    webserver_image = '{}/{}/topology_http_kerberos:webserver'.format(args.registry,
+                                                                      args.namespace or DEFAULT_NAMESPACE)
     webserver_hostname = args.webserver_node[0]
     webserver_node = Node(hostname=webserver_hostname, group='webserver', image=webserver_image,
                           volumes=[{kerberos_volume_dir: KERBEROS_VOLUME_DIR}], ports={80: 80})
