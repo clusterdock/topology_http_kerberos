@@ -1,1 +1,0 @@
-FROM clusterdock/topology_nodebase_kerberos:centos6.8

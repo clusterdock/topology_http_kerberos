@@ -1,10 +1,9 @@
-#!/bin/bash 
+#!/bin/bash
 
-pushd kdc
-docker build . -t clusterdock/topology_http_kerberos:kdc
+#pushd kdc
+#docker build . -t clusterdock/topology_http_kerberos:kdc
+#popd
 
-popd
 pushd webserver
 docker build . -t clusterdock/topology_http_kerberos:webserver
-
 popd
