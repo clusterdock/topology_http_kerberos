@@ -116,18 +116,8 @@ def main(args):
     logger.info('Validating kerberos service health ...')
     _validate_service_health(node=kdc_node, services=['krb5kdc', 'kadmin'], quiet=not args.verbose)
 
-    # create a self signed certificate for webserver.
-    """
-    webserver_node.execute('openssl req -x509 -sha256 -nodes -days 3650 -newkey rsa:2048 '
-                           '-keyout {ssl_cert_dir}/private.key -batch -out {ssl_cert_dir}/selfsigned.crt '
-                           '-subj "/CN={common_name}"'.format(ssl_cert_dir=KERBEROS_VOLUME_DIR,
-                                                              common_name='{}.{}'.format(webserver_hostname,
-                                                                                         cluster.network)),
-                           quiet=not args.verbose)
-    webserver_node.execute('cat {ssl_cert_dir}/selfsigned.crt {ssl_cert_dir}/private.key > '
-                           '{ssl_cert_dir}/selfsigned_with_key.pem'.format(ssl_cert_dir=KERBEROS_VOLUME_DIR),
-                           quiet=not args.verbose)
-    """
+    # copy self signed certificate and private key from image to clusterdock config location. Any consumer
+    # can then import the certificate as a trusted certificate.
     webserver_node.execute('cp /etc/ssl/certs/selfsigned.crt {ssl_cert_dir}/selfsigned.crt '
                            '&& cp /etc/ssl/private/private.key {ssl_cert_dir}/private.key'.format(
                                ssl_cert_dir=KERBEROS_VOLUME_DIR),
